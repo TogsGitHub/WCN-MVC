@@ -1,0 +1,124 @@
+﻿@model IEnumerable<WCN_MVC.Models.DashboardModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+
+    if (Session["UserID"] == null)
+    {
+        Response.Redirect("~/Login/Index");
+    }
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header"><i class="fa fa-laptop"></i> Dashboard</h3>
+    </div>
+</div>
+
+@foreach (var item in Model)
+{
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+            <div class="info-box blue-bg">
+                <i class="fa fa-bank"></i>
+                <div class="">@Html.DisplayFor(model => item.TotalRevenue)</div>
+                <div class="title">Total Revenue</div>
+                @Html.ActionLink("View", "GetTotalRevenueDetails", "Dashboard", null, null)
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+            <div class="info-box brown-bg">
+                <i class="fa fa-credit-card"></i>
+                <div class="">@Html.DisplayFor(model => item.TotalUnbilled)</div>
+                <div class="title">Total Unbilled</div>
+                @Html.ActionLink("View", "GetTotalUnbilledDetails", "Dashboard", null, null)
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+            <div class="info-box dark-bg">
+                <i class="fa fa-thumbs-o-up"></i>
+                <div class="">@Html.DisplayFor(model => item.WcnCreated)</div>
+                <div class="title">Created/Confirmed/<br />Completed</div>
+                @Html.ActionLink("View", "GetCreatedDetails", "Dashboard", null, null)
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+            <div class="info-box green-bg">
+                <i class="fa fa-check"></i>
+                <div class="">@Html.DisplayFor(model => item.WcnApproved)</div>
+                <div class="title">WCN Approved</div>
+                @Html.ActionLink("View", "GetApprovedDetails", "Dashboard", null, null)
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+            <div class="info-box orange-bg">
+                <i class="fa fa-money"></i>
+                <div class="">@Html.DisplayFor(model => item.WcnPayment)</div>
+                <div class="title">WCN Payment</div>
+                @Html.ActionLink("View", "GetPaymentDetails", "Dashboard", null, null)
+            </div>
+        </div>
+    </div>
+}
+<!-- Today status end -->
+
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2><i class="fa fa-flag-o red"></i><strong>Summary of @ViewBag.Dashboard</strong></h2>
+                <div class="panel-actions"></div>
+            </div>
+            <div class="panel-body">
+                <table class="table bootstrap-datatable countries">
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>WCN No.</th>
+                            <th>WCN Date</th>
+                            <th>Total Revenue Amount</th>
+                            <th>Total Unbilled Amount</th>
+                            <th>Created By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CompanyName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.WCNNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.WCNDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Revenue)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Unbilled)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CreatedBy)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--/col-->
+</div>
+
+<!-- statics end -->
+@*</section>*@
+@*</section>*@
+<!--main content end-->

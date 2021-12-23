@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>Home Page</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+
+    <link rel="shortcut icon" href="img/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link href="~/Styles/css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="~/Styles/css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="~/Styles/css/elegant-icons-style.css" rel="stylesheet" />
+    <link href="~/Styles/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- Custom styles -->
+    <link href="~/Styles/css/style.css" rel="stylesheet">
+    <link href="~/Styles/css/style-responsive.css" rel="stylesheet" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <style>
+        .img-center {
+            /*display: block;
+            margin-left: 10px;
+            margin-right: 10px;
+            width: 50%;*/
+        }
+    </style>
+
+
+    <script type="text/javascript">
+        debugger;
+        $(document).ready(function () {
+            var userRole = $('#myHiddenVar').val();
+            alert(userRole);
+            
+            if (userRole == "Administrator") 
+            {
+                $('#linkCustomer').click(function (e) { return true });
+                $('#linkPeriod').click(function (e) { return true; });
+                $('#linkUser').click(function (e) { return true; });
+                $('#linkUserRole').click(function (e) { return true; });
+                $('#linkLookupType').click(function (e) { return true; });
+                $('#linkLookupValue').click(function (e) { return true; });
+                $('#linkUserMapping').click(function (e) { return true; });
+                $('#linkTracker').click(function (e) { return true; });
+                $('#linkApproval').click(function (e) { return true; });
+                $('#linkPayment').click(function (e) { return true; });
+                $('#linkUnbilled').click(function (e) { return true; });
+                $('#linkRevenue').click(function (e) { return true; });
+            } else if (userRole == "Site User") {
+                $('#linkCustomer').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkPeriod').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkUser').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkUserRole').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkLookupType').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkLookupValue').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkUserMapping').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkTracker').click(function (e) { return true; });
+                $('#linkApproval').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkPayment').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkUnbilled').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkRevenue').click(function (e) { return true; });
+            }
+            else if (userRole == "Approval User") {
+                $('#linkCustomer').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkPeriod').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkUser').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkUserRole').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkLookupType').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkLookupValue').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkUserMapping').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkTracker').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkApproval').click(function (e) { return true; });
+                $('#linkPayment').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkUnbilled').click(function (e) { return true; });
+                $('#linkRevenue').click(function (e) { return true; });
+            }
+            else if (userRole == "Payment User") {
+                $('#linkCustomer').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkPeriod').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkUser').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkUserRole').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkLookupType').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkLookupValue').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkUserMapping').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkTracker').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkApproval').click(function (e) { alert('Access is denied.'); return false; });
+                $('#linkPayment').click(function (e) { return true; });
+                $('#linkUnbilled').click(function (e) { return true; });
+                $('#linkRevenue').click(function (e) { return true; });
+            }
+        });
+    </script>
+
+</head>
+
+<body>
+
+    <section id="container" class="">
+        <header class="header dark-bg">
+            <div class="toggle-nav">
+                <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+            </div>
+            <a href="~/Dashboard" class="logo">WORK <span class="lite">COMPLETION </span><span class="lite">NOTE</span></a>
+            <label style="width:250px"></label>
+            <img src="~/Images/companyLogos/togs.png" alt="Company logo" style="width:200px;height:50px;" />
+
+            <div class="top-nav notification-row">
+                <input type="hidden" value="@Session["UserRole"]" id="myHiddenVar" /> 
+                <ul class="nav pull-right top-menu">
+                    @*<li id="task_notificatoin_bar" class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <i class="icon-task-l"></i>
+                                <span class="badge bg-important">5</span>
+                            </a>
+                            <ul class="dropdown-menu extended tasks-bar">
+                                <li>
+                                    <p class="blue">You have 5 pending tasks</p>
+                                </li>
+                            </ul>
+                        </li>*@
+                    @*<li id="mail_notificatoin_bar" class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <i class="icon-envelope-l"></i>
+                                <span class="badge bg-important">5</span>
+                            </a>
+                            <ul class="dropdown-menu extended inbox">
+                                <div class="notify-arrow notify-arrow-blue"></div>
+                                <li>
+                                    <p class="blue">You have 5 new messages</p>
+                                </li>
+                            </ul>
+                        </li>*@
+                    @*<li id="alert_notificatoin_bar" class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <i class="icon-bell-l"></i>
+                                <span class="badge bg-important">7</span>
+                            </a>
+                            <ul class="dropdown-menu extended notification">
+                                <div class="notify-arrow notify-arrow-blue"></div>
+                                <li>
+                                    <p class="blue">You have 7 new notifications</p>
+                                </li>
+                            </ul>
+                        </li>*@
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="profile-ava">
+                                <img alt="" src="~/Images/users/@Session["UserImage"]">
+                            </span>
+                            <span class="username">@Session["LoginName"]</span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <li class="eborder-top">
+                                <a href="~/MyProfile"><i class="icon_profile"></i> My Profile</a>
+                            </li>
+                            <li>
+                                <a href="~/Dashboard"><i class="icon_mail_alt"></i> Dashboard</a>
+                            </li>
+                            <li>
+                                <a href="~/Login/index"><i class="icon_key_alt"></i> Log Out</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+        </header>
+    </section>
+
+    <aside>
+        <div id="sidebar" class="nav-collapse">
+            <!-- sidebar menu start-->
+            <ul class="sidebar-menu">
+                <li class="active">
+                    <a class="" href="~/Dashboard">
+                        <i class="icon_house_alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sub-menu">
+                    <a href="javascript:;" class="">
+                        <i class="icon_document_alt"></i>
+                        <span>Masters</span>
+                        <span class="menu-arrow arrow_carrot-right"></span>
+                    </a>
+                    <ul class="sub">
+                        @*<li><a class="" href="~/Company">Company</a></li>
+                            <li><a class="" href="~/ResourceType">Resource Type</a></li>
+                            <li><a class="" href="~/Location">Location</a></li>
+                            <li><a class="" href="~/Division">Division</a></li>*@
+
+                        <li><a class="" href="~/Customer" id="linkCustomer">Customer</a></li>
+                        <li><a class="" href="~/Period" id="linkPeriod">Period</a></li>
+                        <li><a class="" href="/User" id="linkUser">User</a></li>
+                        <li><a class="" href="~/UserRole" id="linkUserRole">User Role</a></li>
+                        <li><a class="" href="~/LookUpType" id="linkLookupType">Look-Up Type</a></li>
+                        <li><a class="" href="~/LookUpValue" id="linkLookupValue">Look-Up Value</a></li>
+                        <li><a class="" href="~/CompanyUserMapping" id="linkUserMapping">Company User Mapping</a></li>
+                    </ul>
+                </li>
+                <li class="sub-menu">
+                    <a href="javascript:;" class="">
+                        <i class="icon_desktop"></i>
+                        <span>Transactions</span>
+                        <span class="menu-arrow arrow_carrot-right"></span>
+                    </a>
+                    <ul class="sub">
+                        <li><a class="" href="~/WCN" id="linkTracker">Tracker</a></li>
+                        <li><a class="" href="~/WCNApproval" id="linkApproval">Approval</a></li>
+                        <li><a class="" href="~/WCNPayment" id="linkPayment">Payment</a></li>
+                    </ul>
+                </li>
+
+                <li class="sub-menu">
+                    <a href="javascript:;" class="">
+                        <i class="icon_desktop"></i>
+                        <span>Reports</span>
+                        <span class="menu-arrow arrow_carrot-right"></span>
+                    </a>
+                    <ul class="sub">
+                        <li><a class="" href="~/Unbilled" id="linkUnbilled">Unbilled</a></li>
+                        <li><a class="" href="~/Revenue" id="linkRevenue">Revenue</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- sidebar menu end-->
+        </div>
+    </aside>
+
+    <section id="main-content">
+        <section class="wrapper">
+            <!-- page start-->
+            <div class="row" style="height:525px">
+                <div class="col-lg-12">
+                    @RenderBody()
+                </div>
+            </div>
+            <!-- page end-->
+        </section>
+    </section>
+
+    <section>
+        <div class="text-right footer">
+            <div class="credits" style="color:orange">
+                Designed and Developed by <a href="https://www.truckoman.com/">Truckoman Group</a>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- nice scroll -->
+    <script src="js/jquery.scrollTo.min.js"></script>
+    <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
+    <!-- jquery knob -->
+    <script src="assets/jquery-knob/js/jquery.knob.js"></script>
+    <!--custome script for all page-->
+    <script src="js/scripts.js"></script>
+
+    <script>
+        $(".knob").knob();
+    </script>
+</body>
+</html>

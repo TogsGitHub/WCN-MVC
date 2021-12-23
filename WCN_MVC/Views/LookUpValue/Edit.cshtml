@@ -1,0 +1,71 @@
+﻿@model WCN_MVC.Models.LookUpValueModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+
+    if (Session["UserID"] == null)
+    {
+        Response.Redirect("~/Login/Index");
+    }
+}
+
+<div class="container" style="text-align:center">
+    <h4 style="color:red">Look-Up Value (Edit)</h4>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TypeName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.TypeId, ViewBag.TypeLists as List<SelectListItem>, "-- Select Type --", new { id = "selType", style = "width:350px;height:32px", htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TypeName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SequenceNo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SequenceNo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SequenceNo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <label class="danger" style="color:red">@ViewBag.Message</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-info" style="width:150px;height:50px" />
+                @Html.ActionLink("Back", "Index", "LookUpValue", routeValues: null, htmlAttributes: new { @class = "btn btn-info", @role = "button", style = "width:150px;height:50px" })
+            </div>
+        </div>
+    </div>
+}

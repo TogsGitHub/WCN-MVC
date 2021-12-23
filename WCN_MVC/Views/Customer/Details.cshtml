@@ -1,0 +1,109 @@
+﻿@model WCN_MVC.Models.CustomerModel
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+
+    if (Session["UserID"] == null)
+    {
+        Response.Redirect("~/Login/Index");
+    }
+}
+
+<div class="container" style="text-align:center">
+    <h4 style="color:red">Customer Master(View)</h4>
+</div>
+
+<div>
+    <h4>CustomerModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CustomerName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CustomerName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContactNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactPerson)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContactPerson)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Emailid)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Emailid)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PageMessage)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PageMessage)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ModifiedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ModifiedBy)
+        </dd>
+
+        <dt>
+            @Html.ActionLink("Edit", "Edit", "Customer", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary", @role = "button" })
+        </dt>
+
+        <dd>
+            @Html.ActionLink("Back", "Index", "Customer", routeValues: null, htmlAttributes: new { @class = "btn btn-primary", @role = "button" })
+        </dd>
+    </dl>
+</div>

@@ -1,0 +1,82 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model  IPagedList<WCN_MVC.Models.CompanyModel>
+
+@*@model IEnumerable<WCN_MVC.Models.CompanyModel>*@
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+
+    if (Session["UserID"] == null)
+    {
+        Response.Redirect("~/Login/Index");
+    }
+}
+
+<div class="container" style="text-align:center">
+    <h4 style="color:red">Company Master</h4>
+</div>
+
+<div class="nav search-row pull-right" id="top_menu">
+    <!--  search form start -->
+    <ul class="nav top-menu">
+        <li>
+            <form class="navbar-form">
+                <input class="form-control" placeholder="Search" name="SearchString" type="text" style="width:250px" />
+            </form>
+        </li>
+    </ul>
+    <!--  search form end -->
+</div>
+
+@*<select class="form-control input-sm m-bot15">
+        <option>Active</option>
+        <option>Inactive</option>
+    </select>*@
+
+<table class="table">
+    <tr class="danger">
+        <th>
+            @Html.DisplayNameFor(model => model.First().Code)
+            @*@Html.ActionLink("Code", "Index", new { Sorting_Order = ViewBag.SortingCode })*@
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().CompanyName)
+            @*@Html.ActionLink("Company Name", "Index", new { Sorting_Order = ViewBag.SortingName })*@
+        </th>
+        <th>
+            @Html.DisplayName("Action")
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { onclick = "return confirm('Are sure wants to delete?');" })
+            </td>
+        </tr>
+    }
+
+    <tr>
+        <td>
+            @Html.ActionLink("Create New", "Create", "Company", routeValues: null, htmlAttributes: new { @class = "btn btn-info", @role = "button" })
+            @Html.ActionLink("Export To Excel", "Export", "Company", routeValues: null, htmlAttributes: new { @class = "btn btn-info", @role = "button" })
+        </td>
+        <td colspan="2">
+            @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page, Sorting_Order = Request.QueryString["Sorting_Order"] }),
+            new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayPageCountAndCurrentLocation = true, DisplayItemSliceAndTotal = true })
+        </td>
+    </tr>
+</table>
+
+

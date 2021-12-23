@@ -1,0 +1,91 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model  IPagedList<WCN_MVC.Models.UserModel>
+
+@*@model IEnumerable<WCN_MVC.Models.UserModel>*@
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+
+    if (Session["UserID"] == null)
+    {
+        Response.Redirect("~/Login/Index");
+    }
+}
+
+<div class="container" style="text-align:center">
+    <h4 style="color:red">User Master</h4>
+</div>
+
+<div class="nav search-row pull-right" id="top_menu">
+    <!--  search form start -->
+    <ul class="nav top-menu">
+        <li>
+            <form class="navbar-form">
+                <input class="form-control" placeholder="Search" name="SearchString" type="text" style="width:250px">
+            </form>
+        </li>
+    </ul>
+    <!--  search form end -->
+</div>
+
+
+<table class="table">
+    <tr class="danger">
+        <th>
+            @Html.DisplayNameFor(model => model.First().Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().UserRole)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().ContactNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.First().EmailID)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserRole)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailID)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { onclick = "return confirm('Are sure wants to delete?');" })
+            </td>
+        </tr>
+    }
+
+    <tr>
+        <td>
+            @Html.ActionLink("Create New", "Create", "User", routeValues: null, htmlAttributes: new { @class = "btn btn-info", @role = "button" })
+            @Html.ActionLink("Export To Excel", "Export", "User", routeValues: null, htmlAttributes: new { @class = "btn btn-info", @role = "button" })
+        </td>
+        <td colspan="2">
+            @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page, Sorting_Order = Request.QueryString["Sorting_Order"] }),
+            new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, DisplayPageCountAndCurrentLocation = true, DisplayItemSliceAndTotal = true })
+        </td>
+    </tr>
+
+</table>

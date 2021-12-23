@@ -1,0 +1,256 @@
+﻿@model WCN_MVC.Models.WCNModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    if (Session["UserID"] == null)
+    {
+        Response.Redirect("~/Login/Index");
+    }
+
+    List<SelectListItem> WCNStatus = new List<SelectListItem>();
+    WCNStatus.Add(new SelectListItem
+    {
+        Text = "New",
+        Value = "New"
+    });
+    WCNStatus.Add(new SelectListItem
+    {
+        Text = "Created",
+        Value = "Created"
+    });
+    WCNStatus.Add(new SelectListItem
+    {
+        Text = "Approved",
+        Value = "Approved"
+    });
+    WCNStatus.Add(new SelectListItem
+    {
+        Text = "Completed",
+        Value = "Completed"
+    });
+}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round|Open+Sans">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<style type="text/css">
+    body {
+        color: #404E67;
+        background: #F5F7FA;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .table-wrapper {
+        width: 100%;
+        margin: 30px auto;
+        background: #fff;
+        padding: 20px;
+        box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    }
+
+    .table-title {
+        padding-bottom: 10px;
+        margin: 0 0 10px;
+    }
+
+        .table-title h2 {
+            margin: 6px 0 0;
+            font-size: 22px;
+        }
+
+        .table-title .add-new {
+            float: right;
+            height: 30px;
+            font-weight: bold;
+            font-size: 12px;
+            text-shadow: none;
+            min-width: 100px;
+            border-radius: 50px;
+            line-height: 13px;
+        }
+
+            .table-title .add-new i {
+                margin-right: 4px;
+            }
+
+    table.table {
+        table-layout: fixed;
+    }
+
+        table.table tr th, table.table tr td {
+            border-color: #e9e9e9;
+        }
+
+        table.table th i {
+            font-size: 13px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        table.table th:last-child {
+            width: 100px;
+        }
+
+        table.table td a {
+            cursor: pointer;
+            display: inline-block;
+            margin: 0 5px;
+            min-width: 24px;
+        }
+
+            table.table td a.add {
+                color: #27C46B;
+            }
+
+            table.table td a.edit {
+                color: #FFC107;
+            }
+
+            table.table td a.delete {
+                color: #E34724;
+            }
+
+        table.table td i {
+            font-size: 19px;
+        }
+
+        table.table td a.add i {
+            font-size: 24px;
+            margin-right: -1px;
+            position: relative;
+            top: 3px;
+        }
+
+        table.table .form-control {
+            height: 32px;
+            line-height: 32px;
+            box-shadow: none;
+            border-radius: 2px;
+        }
+
+            table.table .form-control.error {
+                border-color: #f50000;
+            }
+
+        table.table td .add {
+            display: none;
+        }
+</style>
+
+<div class="container" style="text-align:center">
+    <h4 style="color:red">WCN - Payment (Edit)</h4>
+</div>
+
+@using (Html.BeginForm("Edit", "WCNPayment", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="row">
+            <div class="col-lg-12">
+                <section class="panel">
+                    <header class="panel-heading" style="background-color:lightblue; color:white">
+                        <b>Tracker</b>
+                    </header>
+
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.WcnNo, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.WcnNo, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled", placeholder = "WCN No.", id = "txtWcnNo" } })
+                            </div>
+
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.Status, htmlAttributes: new { })
+                                @Html.DropDownListFor(model => model.Status, WCNStatus, new { @class = "form-control", id = "selStatus", @disabled = "disabled" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.Period, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.Period, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled", placeholder = "Period", id = "txtPeriod" } })
+                            </div>
+
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.CustomerName, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled", placeholder = "Customer Name", id = "txtCustomerName" } })
+                            </div>
+
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.TotalRevenue, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.TotalRevenue, new { htmlAttributes = new { @class = "form-control", placeholder = "Total Revenue", id = "txtTotalRevenue", @disabled = "disabled" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.Description, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", placeholder = "Description", id = "txtDescription", @disabled = "disabled" } })
+                            </div>
+
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.BillingStatus, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.BillingStatus, new { htmlAttributes = new { @class = "form-control", placeholder = "Billing Status", id = "txtBillingStatus" } })
+                                @Html.ValidationMessageFor(model => model.BillingStatus, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.TotalBillable, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.TotalBillable, new { htmlAttributes = new { @class = "form-control", placeholder = "Total Billable", id = "txtTotalBillable", @disabled = "disabled" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.StakeHolder, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.StakeHolder, new { htmlAttributes = new { @class = "form-control", placeholder = "Stake Holder", id = "txtStakeHolder" } })
+                                @Html.ValidationMessageFor(model => model.StakeHolder, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.InvoiceNumber, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Invoice Number", id = "txtInvoiceNumber" } })
+                                @Html.ValidationMessageFor(model => model.InvoiceNumber, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.InvoicedAmount, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.InvoicedAmount, new { htmlAttributes = new { @class = "form-control", placeholder = "Invoiced Amount", id = "txtInvoicedAmount" } })
+                                @Html.ValidationMessageFor(model => model.InvoicedAmount, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <label class="danger" style="color:red">@ViewBag.Message</label>
+            </div>
+        </div>
+
+        <div class="row-cols pull-right">
+            <div class="col-lg-12">
+                <input type="submit" value="Save" id="btnSave" class="btn btn-info" style="width:150px;height:50px" />
+                @Html.ActionLink("Back", "Index", "WCNPayment", routeValues: null, htmlAttributes: new { @class = "btn btn-info", @role = "button", style = "width:150px;height:50px" })
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,56 @@
+﻿@model WCN_MVC.Models.CompanyUserMappingModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+
+    if (Session["UserID"] == null)
+    {
+        Response.Redirect("~/Login/Index");
+    }
+}
+
+<div class="container" style="text-align:center">
+    <h4 style="color:red">Company And User Mapping (Create)</h4>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CompanyMasterId, Model.CompanyLists, "-- Select Company --", new { id = "selCompany", style = "width:350px;height:32px", htmlAttributes = new { @class = "form-control" } })
+                @*@Html.DropDownListFor(model => model.UserRoleID, ViewBag.UserRoles as List<SelectListItem>, "Select User Role", new { id = "selUserRole", @class = "form-control" })*@
+                @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.UserMasterId, Model.UserLists, "-- Select User --", new { id = "selUser", style = "width:350px;height:32px", htmlAttributes = new { @class = "form-control" } })
+                @*@Html.DropDownListFor(model => model.UserRoleID, ViewBag.UserRoles as List<SelectListItem>, "Select User Role", new { id = "selUserRole", @class = "form-control" })*@
+                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <label class="danger" style="color:red">@ViewBag.Message</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-info" style="width:150px;height:50px" />
+                @Html.ActionLink("Back", "Index", "CompanyUserMapping", routeValues: null, htmlAttributes: new { @class = "btn btn-info", @role = "button", style = "width:150px;height:50px" })
+            </div>
+        </div>
+    </div>
+}

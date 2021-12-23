@@ -1,0 +1,145 @@
+﻿@model WCN_MVC.Models.LoginModel
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>WCN-Login</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="../../plugins/iCheck/square/blue.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link rel="stylesheet" href="style2.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <meta name="viewport" content="width=device-width" />
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/bootstrap-main-theme.css" rel="stylesheet">
+
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script type="text/javascript" src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js'></script>
+    <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/js/bootstrap.min.js'></script>
+    <link rel="stylesheet" href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css' media="screen" />
+    <!-- Bootstrap -->
+
+    <style>
+        #Login-div {
+            position: absolute;
+            left: 40%;
+            top: 20%;
+            border: 2px solid blue;
+            padding: 40px 30px;
+            background-color: lightgrey;
+            height: 70%;
+        }
+
+        .field-validation-error {
+            color: red;
+        }
+
+        .form-control {
+            width: 100% !important;
+        }
+
+        .login-body {
+            background-color: #f1f2f7;
+        }
+
+        .login-img-body {
+            background: url('../images/Login_Background.jpg') no-repeat center fixed;
+            width: 30%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body class="hold-transition login-page login-img-body">
+    <div id="Login-div" class="login-box">
+        @using (Html.BeginForm("Login", "Login", FormMethod.Post))
+        {
+            <div class="ImagePreviewBox" style="text-align:center">
+                <img src="~/Images/companyLogos/togs.png" alt="Company logo" width="60%" height="20%" style="border:groove;text-shadow:inherit" /><br />
+                <label class="col-form-label-lg alert-heading" style="color:darkblue;text-align:center">WORK COMPLETION NOTE</label>
+            </div>
+
+            <div class="login-wrap">
+                <div class="input-group">
+                    @Html.EditorFor(Model => Model.UserName, new { htmlAttributes = new { placeholder = "Username", @class = "form-control", autofocus = "autofocus" } })
+                </div>
+                <div class="col-form-label">
+                    @Html.ValidationMessageFor(model => model.UserName)
+                </div>
+                <div class="input-group">
+                    @Html.EditorFor(Model => Model.Password, new { htmlAttributes = new { placeholder = "Password", @class = "form-control" } })
+                </div>
+                <div class="col-form-label">
+                    @Html.ValidationMessageFor(model => model.Password)
+                </div>
+                <div class="col-form-label">
+                    <label class="field-validation-error">
+                        @Html.DisplayFor(model => model.PageMessage)
+                    </label>
+                </div>
+                <a href="#forgotModal" data-toggle="modal" data-dismiss="modal" class="pull-right">Forgot Password ?</a><br />
+                <button class="btn btn-primary btn-lg btn-block" type="submit" name="submit" value="Login">Login</button>
+            </div>
+            <div class="row" style="height:30px"></div>
+            <div class="centered">
+                <div class="credits" style="color:orange">
+                    Designed and Developed by <a href="https://www.truckoman.com/">Truckoman Group</a>
+                </div>
+            </div>
+        }
+    </div>
+
+    @using (Html.BeginForm("SendPassword", "Login", FormMethod.Post))
+    {
+        <div id="forgotModal" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Forgot Password</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p style="color:blue">Note:- Password will be send to registered email id.</p>
+                        <div class="col-form-label">
+                            <label class="field-validation-error">
+                                @Html.DisplayFor(model => model.ModalMessage)
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            @Html.EditorFor(Model => Model.UserName, new { htmlAttributes = new { placeholder = "Username", @class = "form-control", autofocus = "autofocus" } })
+                            @Html.ValidationMessageFor(Model => Model.UserName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit" name="submit" value="SendPassword">Send</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</body>
+
+</html>

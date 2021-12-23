@@ -1,0 +1,1106 @@
+﻿@model WCN_MVC.Models.WCNModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    if (Session["UserID"] == null)
+    {
+        Response.Redirect("~/Login/Index");
+    }
+
+    List<SelectListItem> WCNStatus = new List<SelectListItem>();
+    WCNStatus.Add(new SelectListItem
+    {
+        Text = "New",
+        Value = "New"
+    });
+    WCNStatus.Add(new SelectListItem
+    {
+        Text = "Created",
+        Value = "Created"
+    });
+    WCNStatus.Add(new SelectListItem
+    {
+        Text = "Approved",
+        Value = "Approved"
+    });
+    WCNStatus.Add(new SelectListItem
+    {
+        Text = "Completed",
+        Value = "Completed"
+    });
+}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round|Open+Sans">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery-1.9.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<style type="text/css">
+    body {
+        color: #404E67;
+        background: #F5F7FA;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .table-wrapper {
+        width: 100%;
+        margin: 30px auto;
+        background: #fff;
+        padding: 20px;
+        box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    }
+
+    .table-title {
+        padding-bottom: 10px;
+        margin: 0 0 10px;
+    }
+
+        .table-title h2 {
+            margin: 6px 0 0;
+            font-size: 22px;
+        }
+
+        .table-title .add-new {
+            float: right;
+            height: 30px;
+            font-weight: bold;
+            font-size: 12px;
+            text-shadow: none;
+            min-width: 100px;
+            border-radius: 50px;
+            line-height: 13px;
+        }
+
+            .table-title .add-new i {
+                margin-right: 4px;
+            }
+
+    table.table {
+        table-layout: fixed;
+    }
+
+        table.table tr th, table.table tr td {
+            border-color: #e9e9e9;
+        }
+
+        table.table th i {
+            font-size: 13px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        table.table th:last-child {
+            width: 100px;
+        }
+
+        table.table td a {
+            cursor: pointer;
+            display: inline-block;
+            margin: 0 5px;
+            min-width: 24px;
+        }
+
+            table.table td a.add {
+                color: #27C46B;
+            }
+
+            table.table td a.edit {
+                color: #FFC107;
+            }
+
+            table.table td a.delete {
+                color: #E34724;
+            }
+
+        table.table td i {
+            font-size: 19px;
+        }
+
+        table.table td a.add i {
+            font-size: 24px;
+            margin-right: -1px;
+            position: relative;
+            top: 3px;
+        }
+
+        table.table .form-control {
+            height: 32px;
+            line-height: 32px;
+            box-shadow: none;
+            border-radius: 2px;
+        }
+
+            table.table .form-control.error {
+                border-color: #f50000;
+            }
+
+        table.table td .add {
+            display: none;
+        }
+</style>
+
+<script type="text/javascript">
+
+    $(function () {
+        debugger;
+        $.get("get_data", {}, function (data) {
+            var row;
+            $.each(data, function (i, v1) {
+                row += "<tr><td>" + v1.ResourceType + "</td>" +
+                    "<td>" + v1.Resource + "</td>" +
+                    "<td>" + v1.StartDate + "</td>" +
+                    "<td>" + v1.EndDate + "</td>" +
+                    "<td>" + v1.Days + "</td>" +
+                    "<td>" + v1.Qty + "</td>" +
+                    "<td>" + v1.Unit + "</td>" +
+                    "<td>" + v1.Rate + "</td>" +
+                    "<td>" + v1.Total + "</td></tr>"
+            });
+            $("#tblLineItems").append(row);
+
+        })
+    })
+
+
+    $(document).ready(function () {
+        debugger;
+        $('[data-toggle="tooltip"]').tooltip();
+        var actions = $("table td:last-child").html();
+
+        // Append table with add row form on add new button click
+        $(".add-new").click(function () {
+            debugger;
+            $(this).attr("disabled", "disabled");
+            var index = $("table tbody tr:last-child").index();
+            var row = '<tr>' +
+                '<td><select class="form-control resource" id="selResourceType"><option value="" selected="true">Select</option>' +
+                '<option class="form-control" value="Revenue">Revenue</option>' +
+                '<option class="form-control" value="Twilight Charge">Twilight Charge</option>' +
+                '<option class="form-control" value="ROP Charge">ROP Charge</option>' +
+                '<option class="form-control" value="ROP Admin Charge">ROP Admin Charge</option>' +
+                '<option class="form-control" value="Mobilisation">Mobilisation</option>' +
+                '<option class="form-control" value="Demobilisation">Demobilisation</option>' +
+                '<option class="form-control" value="Additional Load">Additional Load</option>' +
+                '<option class="form-control" value="Additonal Asset">Additonal Asset</option>' +
+                '<option class="form-control" value="Standby Charge">Standby Charge</option>' +
+                '<option class="form-control" value="Other Charge">Other Charge</option>' +
+                '</select></td>' +
+                '<td><input type="text" class="form-control" name="Resource" id="txtResource"></td>' +
+                '<td><input type="date" class="form-control" name="StartDate" id="txtStartDate"></td>' +
+                '<td><input type="date" class="form-control" name="EndDate" id="txtEndDate" onblur="calculateDays();"></td>' +
+                '<td><input type="text" class="form-control" name="Days" id="txtDays" value="0.0"></td>' +
+                '<td><input type="text" class="form-control" name="Qty" id="txtQty" value="0.0"></td>' +
+                '<td><select class="form-control" id="selUnit"><option value="" selected="true">Select</option>' +
+                '<option value="1">Day</option>' +
+                '<option value="2">Hour</option>' +
+                '<option value="3">Nos</option>' +
+                '<option value="4">Lumpsum</option>' +
+                '</td>' +
+                '<td><input type="text" class="form-control" name="Rate" id="txtRate" value="0.000" onblur="calculateRevenueWiseTotalAmount();"></td>' +
+                '<td><input type="text" class="form-control" name="Total" id="txtTotalAmount" value="0.000" disabled="disabled"></td>' +
+                '<td><a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>' +
+                 '<a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>' +
+                 '<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>'
+            '<td>' + actions + '</td>' +
+        '</tr>';
+            $("table").append(row);
+            $("table tbody tr").eq(index + 1).find(".add, .edit").toggle();
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+
+        // Add row on add button click
+        $(document).on("click", ".add", function () {
+            debugger;
+            var empty = false;
+            var input = $(this).parents("tr").find('input[type="text"],input[type="date"],select#selResourceType,select#selUnit');
+            //var input = $("*");
+            input.each(function () {
+                if (!$(this).val()) {
+                    $(this).addClass("error");
+                    empty = true;
+                } else {
+                    $(this).removeClass("error");
+                }
+            });
+            $(this).parents("tr").find(".error").first().focus();
+            if (!empty) {
+                input.each(function () {
+                    $(this).parent("td").html($(this).val());
+                });
+                $(this).parents("tr").find(".add, .edit").toggle();
+                $(".add-new").removeAttr("disabled");
+            }
+        });
+
+
+        // Edit row on edit button click
+        $(document).on("click", ".edit", function () {
+            debugger;
+            $(this).parents("tr").find("td:not(:last-child)").each(function () {
+                //$(this).html('<select class="form-control" id="selResourceType" value="' + $(this).text() + '">');
+                $(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
+            });
+
+            //var name = $(this).parents("tr").find("td:not(:last-child)").text(Resource);
+            //var resource = $(this).closest("tr").find("td:not(:last-child)").val();
+
+            $(this).parents("tr").find(".add, .edit").toggle();
+            $(".add-new").attr("disabled", "disabled");
+        });
+
+        // Delete row on delete button click
+        $(document).on("click", ".delete", function () {
+            debugger;
+            $(this).parents("tr").remove();
+            $(".add-new").removeAttr("disabled");
+            calculateRevenueWiseTotalAmountForDeletion();
+        });
+
+        loadData();
+
+    });
+
+    function calculateRevenueWiseTotalAmountForDeletion() {
+        var TotalAmount = 0;
+        var TotalRevenue = 0;
+        var TotalBillable = 0;
+        var Revenue = 0;
+        var TwilightCharges = 0;
+        var ROPCharges = 0;
+        var ROPAdminCharges = 0;
+        var Mobilisation = 0;
+        var Demobilisation = 0;
+        var StandbyCharges = 0;
+        var AdditonalAsset = 0;
+        var AdditionalLoad = 0;
+        var OtherCharges = 0;
+
+        debugger;
+        var table = document.getElementById('tblLineItems');
+        var rowLength = table.rows.length;
+
+        $("#txtRevenue").val(0);
+        $("#txtTwilightCharges").val(0);
+        $("#txtROPCharges").val(0);
+        $("#txtROPAdminCharges").val(0);
+        $("#txtAdditionalLoad").val(0);
+        $("#txtMobilisation").val(0);
+        $("#txtDemobilisation").val(0);
+        $("#txtOtherCharges").val(0);
+        $("#txtStandbyCharges").val(0);
+        $("#txtAdditonalAsset").val(0);
+        $("#txtTotalRevenue").val(0);
+        $("#txtTotalBillableAmount").val(0);
+
+        for (var i = 0; i < rowLength; i += 1) {
+            var row = table.rows[i];
+
+            var resourceType = row.cells[0].innerText;
+            var totalAmount = row.cells[8].innerText;
+
+            if (resourceType != 'ResourceType') {
+
+                if (resourceType == 'Revenue') {
+                    $("#txtRevenue").val(parseFloat(totalAmount).toFixed(3));
+                }
+                else if (resourceType == 'Twilight Charges') {
+                    $("#txtTwilightCharges").val(parseFloat(totalAmount).toFixed(3));
+                }
+                else if (resourceType == 'ROP Charges') {
+                    $("#txtROPCharges").val(parseFloat(totalAmount).toFixed(3));
+                }
+                else if (resourceType == 'ROP Admin Charges') {
+                    $("#txtROPAdminCharges").val(parseFloat(totalAmount).toFixed(3));
+                }
+                else if (resourceType == 'Additional Load') {
+                    $("#txtAdditionalLoad").val(parseFloat(totalAmount).toFixed(3));
+                }
+                else if (resourceType == 'Mobilisation') {
+                    $("#txtMobilisation").val(parseFloat(totalAmount).toFixed(3));
+                }
+                else if (resourceType == 'Demobilisation') {
+                    $("#txtDemobilisation").val(parseFloat(totalAmount).toFixed(3));
+                }
+                else if (resourceType == 'Other Charges') {
+                    $("#txtOtherCharges").val(parseFloat(totalAmount).toFixed(3));
+                }
+                else if (resourceType == 'Standby Charges') {
+                    $("#txtStandbyCharges").val(parseFloat(totalAmount).toFixed(3));
+                }
+                else if (resourceType == 'Additonal Asset') {
+                    $("#txtAdditonalAsset").val(parseFloat(totalAmount).toFixed(3));
+                }
+
+                Revenue = parseFloat($("#txtRevenue").val()).toFixed(3);
+                if (Revenue == '' || Revenue == 'NaN') {
+                    Revenue = 0;
+                }
+                else {
+                    parseFloat(Revenue).toFixed(3)
+                }
+
+                TwilightCharges = $("#txtTwilightCharges").val();
+                if (TwilightCharges == '' || TwilightCharges == 'NaN') {
+                    TwilightCharges = 0;
+                }
+                else {
+                    parseFloat(TwilightCharges).toFixed(3)
+                }
+
+                ROPCharges = $("#txtROPCharges").val();
+                if (ROPCharges == '' || ROPCharges == 'NaN') {
+                    ROPCharges = 0;
+                }
+                else {
+                    parseFloat(ROPCharges).toFixed(3)
+                }
+
+                ROPAdminCharges = $("#txtROPAdminCharges").val();
+                if (ROPAdminCharges == '' || ROPAdminCharges == 'NaN') {
+                    ROPAdminCharges = 0;
+                }
+                else {
+                    parseFloat(ROPAdminCharges).toFixed(3)
+                }
+
+                AdditionalLoad = $("#txtAdditionalLoad").val();
+                if (AdditionalLoad == '' || AdditionalLoad == 'NaN') {
+                    AdditionalLoad = 0;
+                }
+                else {
+                    parseFloat(AdditionalLoad).toFixed(3)
+                }
+
+                Mobilisation = $("#txtMobilisation").val();
+                if (Mobilisation == '' || Mobilisation == 'NaN') {
+                    Mobilisation = 0;
+                }
+                else {
+                    parseFloat(Mobilisation).toFixed(3)
+                }
+
+                Demobilisation = $("#txtDemobilisation").val();
+                if (Demobilisation == '' || Demobilisation == 'NaN') {
+                    Demobilisation = 0;
+                }
+                else {
+                    parseFloat(Demobilisation).toFixed(3)
+                }
+
+                OtherCharges = $("#txtOtherCharges").val();
+                if (OtherCharges == '' || OtherCharges == 'NaN') {
+                    OtherCharges = 0;
+                }
+                else {
+                    parseFloat(OtherCharges).toFixed(3)
+                }
+
+                StandbyCharges = $("#txtStandbyCharges").val();
+                if (StandbyCharges == '' || StandbyCharges == 'NaN') {
+                    StandbyCharges = 0;
+                }
+                else {
+                    parseFloat(StandbyCharges).toFixed(3)
+                }
+
+                AdditonalAsset = $("#txtAdditonalAsset").val();
+                if (AdditonalAsset == '' || AdditonalAsset == 'NaN') {
+                    AdditonalAsset = 0;
+                }
+                else {
+                    parseFloat(AdditonalAsset).toFixed(3)
+                }
+
+
+                TotalRevenue =
+                    (parseFloat(Revenue)
+                    + parseFloat(TwilightCharges)
+                    + parseFloat(ROPCharges)
+                    + parseFloat(ROPAdminCharges)
+                    + parseFloat(AdditionalLoad)
+                    + parseFloat(Mobilisation)
+                    + parseFloat(Demobilisation)
+                    + parseFloat(OtherCharges)
+                    + parseFloat(StandbyCharges)
+                    + parseFloat(AdditonalAsset)
+                    ).toFixed(3);
+
+                $("#txtTotalRevenue").val(TotalRevenue);
+
+                $("#txtTotalBillableAmount").val(TotalRevenue);
+
+            }
+
+        }
+    }
+
+
+    function loadData() {
+        $.ajax({
+            type: "POST",
+            url: "/WCN/GetDataWCNLineItems",
+            traditional: true,
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data) {
+                    var len = data.length;
+                    var txt = "";
+                    if (len > 0) {
+                        for (var i = 0; i < len; i++) {
+                            debugger;
+                            var sdResult = { "StartDate": data[i].StartDate };
+                            var sDate = sdResult.StartDate.replace('/Date(', '').replace(')', '').replace('/', '');
+                            var sDateVal = new Date(parseInt(sDate)).toLocaleDateString();
+
+                            var edResult = { "EndDate": data[i].EndDate };
+                            var eDate = edResult.EndDate.replace('/Date(', '').replace(')', '').replace('/', '');
+                            var eDateVal = new Date(parseInt(eDate)).toLocaleDateString();
+
+                            txt += "<tr><td>" + data[i].ResourceType + "</td><td>" + data[i].Resource + "</td>"
+                              + "<td>" + sDateVal + "</td>" + "<td>" + eDateVal + "</td>"
+                            + "<td>" + data[i].Days + "</td>" + "<td>" + data[i].Qty + "</td>"
+                            + "<td>" + data[i].Unit + "</td>" + "<td>" + data[i].Rate + "</td>"
+                            + "<td>" + data[i].Total + "</td>"
+                            + "<td><a class='add' title='Add' data-toggle='tooltip'><i class='material-icons'>&#xE03B;</i></a>"
+                            + "<a class='edit' title='Edit' data-toggle='tooltip'><i class='material-icons'>&#xE254;</i></a>"
+                            + "<a class='delete' title='Delete' data-toggle='tooltip'><i class='material-icons'>&#xE872;</i></a></td></tr>"
+                        }
+
+                        if (txt != "") {
+                            $("#tblLineItems tbody").append(txt);
+                        }
+                    }
+                }
+            },
+            error: function (data) { alert("error" + data) }
+        });
+    }
+
+
+    function calculateDays() {
+        var sdt = new Date($("#txtStartDate").val());
+        var edt = new Date($("#txtEndDate").val());
+
+        if ($("#txtStartDate").val() == '') {
+            alert("Start date required.");
+            $("#txtStartDate").focus();
+        }
+        else if ($("#txtEndDate").val() == '') {
+            alert("End date required.");
+            $("#txtEndDate").focus();
+        }
+        else if ($("#txtStartDate").val() > $("#txtEndDate").val()) {
+            alert("Start date is greater than end date.");
+            $("#txtEndDate").focus();
+        }
+        else {
+            var millisecondsPerDay = 1000 * 60 * 60 * 24;
+            var millisBetween = new Date(edt - sdt);
+            var days = ((millisBetween / millisecondsPerDay) + 1).toFixed(1);
+            $("#txtDays").val(days);
+        }
+    };
+
+
+    function calculateRevenueWiseTotalAmount() {
+        var TotalAmount = 0;
+        var TotalRevenue = 0;
+        var TotalBillable = 0;
+
+        var selectedUnit = $("#selUnit option:selected").text();
+        var selectedRT = $("#selResourceType option:selected").text();
+
+        if (selectedUnit == 'Lumpsum') {
+            $("#txtTotalAmount").val($("#txtRate").val());
+        }
+        else {
+            $("#txtTotalAmount").val($("#txtDays").val() * $("#txtQty").val() * $("#txtRate").val());
+        }
+
+        TotalAmount = $("#txtTotalAmount").val();
+        //TotalAmount = TotalAmount.toFixed(3);
+
+        if (selectedRT == 'Revenue') {
+            $("#txtRevenue").val(TotalAmount);
+        }
+        else if (selectedRT == 'Twilight Charges') {
+            $("#txtTwilightCharges").val(TotalAmount);
+        }
+        else if (selectedRT == 'ROP Charges') {
+            $("#txtROPCharges").val(TotalAmount);
+        }
+        else if (selectedRT == 'ROP Admin Charges') {
+            $("#txtROPAdminCharges").val(TotalAmount);
+        }
+        else if (selectedRT == 'Additional Load') {
+            $("#txtAdditionalLoad").val(TotalAmount);
+        }
+        else if (selectedRT == 'Mobilisation') {
+            $("#txtMobilisation").val(TotalAmount);
+        }
+        else if (selectedRT == 'Demobilisation') {
+            $("#txtDemobilisation").val(TotalAmount);
+        }
+        else if (selectedRT == 'Other Charges') {
+            $("#txtOtherCharges").val(TotalAmount);
+        }
+        else if (selectedRT == 'Standby Charges') {
+            $("#txtStandbyCharges").val(TotalAmount);
+        }
+        else if (selectedRT == 'Additonal Asset') {
+            $("#txtAdditonalAsset").val(TotalAmount);
+        }
+
+        $("#txtTotalRevenue").val($("#txtRevenue").val() +
+            $("#txtTwilightCharges").val() +
+            $("#txtROPCharges").val() + $("#txtROPAdminCharges").val() + $("#txtAdditionalLoad").val() +
+            $("#txtMobilisation").val() + $("#txtDemobilisation").val() + $("#txtOtherCharges").val() +
+            $("#txtStandbyCharges").val() + $("#txtAdditonalAsset").val());
+
+        debugger;
+        $("#txtTotalBillableAmount").val(parseInt($("#txtRevenue").val()) - parseInt($("#txtDiscountAmount").val()) -
+            parseInt($("#txtAdditionalDiscount").val()));
+    };
+
+
+    function ChangeYear() {
+        var selectedMonth = $("#selMonth option:selected").text();
+        var selectedYear = $("#selYear option:selected").text();
+        selectedMonth = selectedMonth.substring(0, 3);
+        if (selectedMonth != 'Select Month' && selectedYear != 'Select Year') {
+            $("#periodLocal").val(selectedMonth + '-' + selectedYear);
+        }
+    }
+
+
+    $("body").on("click", "#btnSave", function () {
+        //Loop through the Table rows and build a JSON array.
+        debugger;
+
+        var status = $("#selStatus option:selected").val();
+        if (status == 'Completed') {
+            if ($("#txtCompletedDate").val() == '') {
+                $("#txtCompletedDate").focus();
+                alert("Enter completed date");
+                return false;
+            }
+        }
+
+        var tracker = {
+            wcnNo: $("#txtWcnNo").val(),
+            status: $("#selStatus option:selected").val(), //$("#txtStatus").val(),
+            companyId: $("#selCompany option:selected").val(),
+            wcnDate: $("#txtWcnDate").val(),
+            startDate: $("#txtWcnStartDate").val(),
+            completedDate: $("#txtCompletedDate").val(),
+            periodId: $("#selPeriod option:selected").val(),
+            divisionId: $("#selDivision option:selected").val(),
+            customerId: $("#selCustomer option:selected").val(),
+            locationId: $("#selLocation option:selected").val(),
+            description: $("#txtDescription").val(),
+            rigNo: $("#txtRigNo").val(),
+            otherLocation: $("#txtOtherLocation").val(),
+            isWcnSent: $("#isWcnSent").prop('checked'),
+            isWcnSigned: $("#isWcnSigned").prop('checked'),
+            isClientSigned: $("#isClientSigned").prop('checked')
+        };
+
+        var lineitems = new Array();
+        $("#tblLineItems TBODY TR").each(function () {
+            var row = $(this);
+            var lineitem = {};
+            lineitem.ResourceType = row.find("TD").eq(0).html();
+            lineitem.Resource = row.find("TD").eq(1).html();
+            lineitem.StartDate = row.find("TD").eq(2).html();
+            lineitem.EndDate = row.find("TD").eq(3).html();
+            lineitem.Days = row.find("TD").eq(4).html();
+            lineitem.Qty = row.find("TD").eq(5).html();
+            lineitem.Unit = row.find("TD").eq(6).html();
+            lineitem.Rate = row.find("TD").eq(7).html();
+            lineitem.Total = row.find("TD").eq(8).html();
+            lineitems.push(lineitem);
+        });
+
+        var data = JSON.stringify({
+            'wcnLineItems': lineitems,
+            'tracker': tracker
+        });
+
+        //Send the JSON array to Controller using AJAX.
+        $.ajax({
+            type: "POST",
+            url: "/WCN/EditWCNTrackerDetails",
+            data: data,
+            //JSON.stringify(lineitems, model),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (r) {
+                alert("WCN No. " + r);
+            }
+        });
+    });
+
+</script>
+
+<div class="container" style="text-align:center">
+    <h4 style="color:red">Tracker (Edit)</h4>
+</div>
+
+@using (Html.BeginForm("Edit", "WCN", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="row">
+            <div class="col-lg-12">
+                <section class="panel">
+                    <header class="panel-heading" style="background-color:lightblue; color:white">
+                        <b>Tracker</b>
+                    </header>
+
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.WcnNo, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.WcnNo, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", placeholder = "WCN No.", id = "txtWcnNo" } })
+                                @Html.ValidationMessageFor(model => model.WcnNo, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.Status, htmlAttributes: new { })
+                                @*@Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", placeholder = "Status", id = "txtStatus" } })*@
+                                @Html.DropDownListFor(model => model.Status, WCNStatus, new { @class = "form-control", id = "selStatus" })
+                                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { })
+                                @Html.DropDownListFor(model => model.CompanyId, ViewBag.Companies as List<SelectListItem>, "Select Company", new { id = "selCompany", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.WCNDate, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.WCNDate, new { htmlAttributes = new { @class = "form-control", id = "txtWcnDate" } })
+                                @Html.ValidationMessageFor(model => model.WCNDate, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.StartDate, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control", id = "txtWcnStartDate" } })
+                                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.CompletedDate, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.CompletedDate, new { htmlAttributes = new { @class = "form-control", id = "txtCompletedDate" } })
+                                @*@Html.TextBoxFor(model => model.CompletedDate, new { htmlAttributes = new { @class = "form-control", id = "txtCompletedDate", name= "comDate" } })*@
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.Period, htmlAttributes: new { })
+                                @*<a href="#PeriodModal" data-toggle="modal" data-dismiss="modal" class="pull-right" style="background-color:red;color:white">Add Period</a>*@
+                                @*@Html.DropDownListFor(model => model.PeriodId, Model.PeriodLists, "-- Select Period --", new { id = "selPeriod", style = "width:350px;height:32px", htmlAttributes = new { @class = "form-control", autofocus = "autofocus" } })*@
+                                @Html.DropDownListFor(model => model.PeriodId, ViewBag.Periods as List<SelectListItem>, "Select Period", new { id = "selPeriod", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Period, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.DivisionName, htmlAttributes: new { })
+                                @*<a href="#DivisionModal" data-toggle="modal" data-dismiss="modal" class="pull-right" style="background-color:red;color:white">Add Division</a>*@
+                                @Html.DropDownListFor(model => model.DivisionId, ViewBag.Divisions as List<SelectListItem>, "Select Division", new { id = "selDivision", @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.DivisionName, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.CustomerName, htmlAttributes: new { })
+                                @*<a href="#CustomerModal" data-toggle="modal" data-dismiss="modal" class="pull-right" style="background-color:red;color:white">Add Customer</a>*@
+                                @Html.DropDownListFor(model => model.CustomerId, ViewBag.Customers as List<SelectListItem>, "Select Customer", new { id = "selCustomer", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.CustomerName, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.LocationName, htmlAttributes: new { })
+                                @*<a href="#LocationModal" data-toggle="modal" data-dismiss="modal" class="pull-right" style="background-color:red;color:white">Add Location</a>*@
+                                @Html.DropDownListFor(model => model.LocationId, ViewBag.Locations as List<SelectListItem>, "Select Location", new { id = "selLocation", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.LocationName, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.OtherLocation, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.OtherLocation, new { htmlAttributes = new { @class = "form-control", placeholder = "Other Location", id = "txtOtherLocation" } })
+                                @Html.ValidationMessageFor(model => model.OtherLocation, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.RigNo, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.RigNo, new { htmlAttributes = new { @class = "form-control", placeholder = "Rig No.", id = "txtRigNo" } })
+                                @Html.ValidationMessageFor(model => model.RigNo, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-8">
+                                @Html.LabelFor(model => model.Description, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", placeholder = "Description", id = "txtDescription" } })
+                                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.IsDiscount, htmlAttributes: new { })
+                                @Html.CheckBoxFor(model => model.IsDiscount, new { @disabled = "disabled", htmlAttributes = new { @class = "form-control", id = "isDiscount" } })
+                                @Html.EditorFor(model => model.DiscountAmount, new { htmlAttributes = new { @class = "form-control", placeholder = "Discount Amount", @readonly = "readonly", id = "txtDiscount" } })
+                                @Html.ValidationMessageFor(model => model.DiscountAmount, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.DiscountRemark, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.DiscountRemark, new { htmlAttributes = new { @class = "form-control", placeholder = "Discount Remark", @readonly = "readonly", id = "txtDiscountRemark" } })
+                                @Html.ValidationMessageFor(model => model.DiscountRemark, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.IsWCNSent, htmlAttributes: new { })
+                                <div class="col-md-8">
+                                    <div class="checkbox">
+                                        @Html.EditorFor(model => model.IsWCNSent, new { htmlAttributes = new { id = "isWcnSent" } })
+                                        @Html.ValidationMessageFor(model => model.IsWCNSent, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.IsWCNSigned, htmlAttributes: new { })
+                                <div class="col-md-8">
+                                    <div class="checkbox">
+                                        @Html.EditorFor(model => model.IsWCNSigned, new { htmlAttributes = new { id = "isWcnSigned" } })
+                                        @Html.ValidationMessageFor(model => model.IsWCNSigned, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.IsClientSigned, htmlAttributes: new { })
+                                <div class="col-md-8">
+                                    <div class="checkbox">
+                                        @Html.EditorFor(model => model.IsClientSigned, new { htmlAttributes = new { id = "isClientSigned" } })
+                                        @Html.ValidationMessageFor(model => model.IsClientSigned, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <header class="panel-heading" style="background-color:lightblue; color:white">
+                        <b>Line Items</b>
+                    </header>
+                    <div class="table-title">
+                        <div class="row">
+                            <div class="col-sm-8"><h2><b></b></h2></div>
+                            <div class="col-sm-4">
+                                <button type="button" class="btn btn-danger add-new"><i class="fa fa-plus"></i> Add New</button>
+                            </div>
+                        </div>
+                        <table class="table table-bordered" id="tblLineItems">
+                            <thead>
+                                <tr style="width:100%; background-color:lightgreen;">
+                                    <th style="width:15%; color:white">ResourceType</th>
+                                    <th style="width:10%; color:white">Resource</th>
+                                    <th style="width:15%; color:white">StartDate</th>
+                                    <th style="width:15%;color:white">EndDate</th>
+                                    <th style="width:5%;color:white">Days</th>
+                                    <th style="width:7%;color:white">Qty</th>
+                                    <th style="width:7%; color:white">Unit</th>
+                                    <th style="width:8%; color:white">Rate</th>
+                                    <th style="width:10%; color:white">Total</th>
+                                    <th style="width:8%; color:white">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <section class="panel">
+                    <header class="panel-heading" style="background-color:lightblue; color:white">
+                        <b>Revenue Summary (OMR)</b>
+                    </header>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.Revenue, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.Revenue, new { htmlAttributes = new { @class = "form-control", placeholder = "Revenue", @disabled = "disabled", id = "txtRevenue" } })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.TwilightCharges, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.TwilightCharges, new { htmlAttributes = new { @class = "form-control", placeholder = "Twilight Charges", @disabled = "disabled", id = "txtTwilightCharges" } })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.ROPCharges, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.ROPCharges, new { htmlAttributes = new { @class = "form-control", placeholder = "ROP Charges", @disabled = "disabled", id = "txtROPCharges" } })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.ROPAdminCharges, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.ROPAdminCharges, new { htmlAttributes = new { @class = "form-control", placeholder = "ROP Admin Charges", @disabled = "disabled", id = "txtROPAdminCharges" } })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.Mobilisation, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.Mobilisation, new { htmlAttributes = new { @class = "form-control", placeholder = "Mobilisation", @disabled = "disabled", id = "txtMobilisation" } })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.Demobilisation, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.Demobilisation, new { htmlAttributes = new { @class = "form-control", placeholder = "Demobilisation", @disabled = "disabled", id = "txtDemobilisation" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.OtherCharges, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.OtherCharges, new { htmlAttributes = new { @class = "form-control", placeholder = "Other Charges", @disabled = "disabled", id = "txtOtherCharges" } })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.StandbyCharges, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.StandbyCharges, new { htmlAttributes = new { @class = "form-control", placeholder = "Standby Charges", @disabled = "disabled", id = "txtStandbyCharges" } })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.AdditionalLoad, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.AdditionalLoad, new { htmlAttributes = new { @class = "form-control", placeholder = "Additional Load", @disabled = "disabled", id = "txtAdditionalLoad" } })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.AdditionalAsset, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.AdditionalAsset, new { htmlAttributes = new { @class = "form-control", placeholder = "Additional Asset", @disabled = "disabled", id = "txtAdditonalAsset" } })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.DiscountRemark, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.DiscountRemark, new { htmlAttributes = new { @class = "form-control", placeholder = "Discount Remark", @disabled = "disabled", id = "txtDiscountRemark" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.TotalRevenue, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.TotalRevenue, new { htmlAttributes = new { @class = "form-control", placeholder = "Total Revenue", @disabled = "disabled", id = "txtTotalRevenue" } })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.DiscountAmount, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.DiscountAmount, new { htmlAttributes = new { @class = "form-control", placeholder = "Total Revenue", @disabled = "disabled", id = "txtDiscountAmount" } })
+                            </div>
+
+                            <div class="col-md-2">
+                                @Html.LabelFor(model => model.TotalBillable, htmlAttributes: new { })
+                                @Html.EditorFor(model => model.TotalBillable, new { htmlAttributes = new { @class = "form-control", placeholder = "Total Revenue", @disabled = "disabled", id = "txtTotalBillableAmount" } })
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <label class="danger" style="color:red">@ViewBag.Message</label>
+            </div>
+        </div>
+
+        <div class="row-cols pull-right">
+            <div class="col-lg-12">
+                <input type="submit" value="Save" id="btnSave" class="btn btn-info" style="width:150px;height:50px" />
+                @Html.ActionLink("Confirm WCN", "ConfirmWCN", "WCN", routeValues: null, htmlAttributes: new { @class = "btn btn-info", @role = "button", style = "width:150px;height:50px" })
+                @Html.ActionLink("Complete WCN", "CompleteWCN", "WCN", routeValues: null, htmlAttributes: new { @class = "btn btn-info", @role = "button", style = "width:150px;height:50px" })
+                @Html.ActionLink("Generate WCN", "GenerateWCN", "WCN", routeValues: null, htmlAttributes: new { @class = "btn btn-info", @role = "button", style = "width:150px;height:50px" })
+                @Html.ActionLink("Back", "Index", "WCN", routeValues: null, htmlAttributes: new { @class = "btn btn-info", @role = "button", style = "width:150px;height:50px" })
+            </div>
+        </div>
+
+    </div>
+}
+
+@using (Html.BeginForm("AddDivision", "WCN", FormMethod.Post))
+{
+    <div id="DivisionModal" class="modal fade">
+        <div class="modal-dialog modal-sm pull-left">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Division</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            @Html.EditorFor(model => model.DivisionCode, new { htmlAttributes = new { @class = "form-control", placeholder = "Division Code" } })
+                            @Html.ValidationMessageFor(model => model.DivisionCode, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.EditorFor(model => model.DivisionName, new { htmlAttributes = new { @class = "form-control", placeholder = "Division Name" } })
+                            @Html.ValidationMessageFor(model => model.DivisionName, "", new { @class = "text-danger" })
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit" name="submit" value="Save">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@using (Html.BeginForm("AddLocation", "WCN", FormMethod.Post))
+{
+    <div id="LocationModal" class="modal fade">
+        <div class="modal-dialog modal-sm pull-left">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Location</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            @Html.EditorFor(model => model.LocationName, new { htmlAttributes = new { @class = "form-control", placeholder = "Location Name" } })
+                            @Html.ValidationMessageFor(model => model.LocationName, "", new { @class = "text-danger" })
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit" name="submit" value="Save">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@using (Html.BeginForm("AddCustomer", "WCN", FormMethod.Post))
+{
+    <div id="CustomerModal" class="modal fade">
+        <div class="modal-dialog modal-sm pull-left">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Customer</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control", placeholder = "Customer Name" } })
+                            @Html.ValidationMessageFor(model => model.CustomerName, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.EditorFor(model => model.ContactNo, new { htmlAttributes = new { @class = "form-control", placeholder = "Contact No." } })
+                            @Html.ValidationMessageFor(model => model.ContactNo, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.EditorFor(model => model.ContactPerson, new { htmlAttributes = new { @class = "form-control", placeholder = "Contact Person" } })
+                            @Html.ValidationMessageFor(model => model.ContactPerson, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", placeholder = "Address" } })
+                            @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.EditorFor(model => model.Emailid, new { htmlAttributes = new { @class = "form-control", placeholder = "Email ID" } })
+                            @Html.ValidationMessageFor(model => model.Emailid, "", new { @class = "text-danger" })
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit" name="submit" value="Save">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@using (Html.BeginForm("AddPeriod", "WCN", FormMethod.Post))
+{
+    <div id="PeriodModal" class="modal fade">
+        <div class="modal-dialog modal-sm pull-left">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Period</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            @Html.DropDownListFor(model => model.Month, new List<SelectListItem>
+                            {new SelectListItem { Text = "Select Month", Value = "0", Selected=true},
+                            new SelectListItem { Text = "January", Value = "1"},
+                            new SelectListItem { Text = "February", Value = "2"},
+                            new SelectListItem { Text = "March", Value = "3"},
+                            new SelectListItem { Text = "April", Value = "4"},
+                            new SelectListItem { Text = "May", Value = "5"},
+                            new SelectListItem { Text = "June", Value = "6"},
+                            new SelectListItem { Text = "July", Value = "7"},
+                            new SelectListItem { Text = "August", Value = "8"},
+                            new SelectListItem { Text = "September", Value = "9"},
+                            new SelectListItem { Text = "October", Value = "10"},
+                            new SelectListItem { Text = "November", Value = "11"},
+                            new SelectListItem { Text = "December", Value = "12"}},
+                            new { id = "selMonth", style = "width:250px;height:32px", @onChange = "return ChangeYear()" })
+                            @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @*@Html.DropDownListFor(model => model.Year, Model.YearLists, "Select Year", new { @id = "selYear", style = "width:250px;height:32px", @onChange = "return ChangeYear()", htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Year, "", new { @class = "text-danger" })*@
+                        </div>
+
+                        <div class="form-group">
+                            @Html.EditorFor(model => model.Period, new { htmlAttributes = new { @id = "periodLocal", @class = "form-control", placeholder = "Period", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.Period, "", new { @class = "text-danger" })
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit" name="submit1" value="Save">Update</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

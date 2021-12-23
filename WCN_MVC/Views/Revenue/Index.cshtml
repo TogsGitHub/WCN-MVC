@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div class="container" style="text-align:center">
+    <h4 style="color:red">Revenue Report (Criteria)</h4>
+</div>
+
+@using (Html.BeginForm("GenerateRevenueReport", "Revenue", FormMethod.Post))
+{
+    <table style="width:100%">
+        <tr>
+            <td style="width:25%"></td>
+            <td style="width:20%">
+                @Html.Label("From Date : ")
+            </td>
+            <td style="width:30%">
+                <input type="date" id="txtFromDate" name="FromDate" />
+            </td>
+            <td style="width:25%"></td>
+        </tr>
+
+        <tr>
+            <td style="width:25%"></td>
+            <td style="width:20%">
+                @Html.Label("To Date : ")
+            </td>
+            <td style="width:30%">
+                <input type="date" id="txtToDate" name="ToDate" />
+            </td>
+            <td style="width:25%"></td>
+        </tr>
+
+        <tr>
+            <td style="width:25%"></td>
+            <td style="width:20%">
+                @Html.Label("Company : ")
+            </td>
+            <td style="width:30%">
+                @Html.DropDownList("CompanyId", ViewBag.Companies as List<SelectListItem>, "Select Company", new { id = "selCompany", @class = "form-control" })
+            </td>
+            <td style="width:25%"></td>
+        </tr>
+
+        <tr>
+            <td colspan="4" style="width:100%; text-align:center">
+                <label class="danger" style="color:red">@ViewBag.Message</label>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="width:25%"></td>
+            <td style="width:20%">
+                <input type="submit" id="btnReport" name="View" value="View" style="width:200px;color:white;background-color:blue" />
+            </td>
+            <td style="width:30%">
+                <input type="reset" id="btnReset" onclick="btnReset_Click" name="Rest" value="Reset" style="width:200px;color:white;background-color:blue" />
+            </td>
+            <td style="width:25%"></td>
+        </tr>
+    </table>
+}
