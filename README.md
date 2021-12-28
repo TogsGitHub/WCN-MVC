@@ -1,3 +1,0 @@
-# WCN-MVC
-
-New repository...
